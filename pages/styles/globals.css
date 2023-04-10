@@ -114,7 +114,16 @@ pre code.hljs {
     color: #397300;
   }
   
-  
+  .uploadButton{
+    text-align: center;
+    padding: 5px;
+    background: #ff7600;
+    color: white;
+    border-radius: 8px;
+  }
+  .img-fluid{
+    width: 40%;
+  }
   /* Meta color: hue: 200 */
   
   .hljs-meta {
@@ -125,6 +134,21 @@ pre code.hljs {
     color: #38a;
   }
   
+  .btn{
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .btn-primary{
+    background: #1f7199;
+    color: white;
+  }
+  .btn-danger{
+    background: #f76d6d;
+    color: white;
+  }
+  .rightleftpadd{
+    padding: 0px 100px;
+  }
   
   /* Misc effects */
   

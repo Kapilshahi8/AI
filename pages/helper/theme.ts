@@ -145,7 +145,7 @@ export const themeUserDetails = {
                                                       target="_blank"><span
                                                         style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span
                                                           dir="ltr"
-                                                          style="word-break: break-word; line-height: 32px;">View_Menu</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
+                                                          style="word-break: break-word; line-height: 32px;">View Menu</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
                                                   </div>
                                                 </td>
                                               </tr>
