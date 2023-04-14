@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
+import { themeUserDetails } from "./helper/theme";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -15,29 +16,91 @@ async function askToAI(ques){
   return query
 }
 
+const response = {
+  message:{
+    time:null,
+    menuItem:null,
+    subjectLine:null,
+    emailBody:null
+  },
+  status:false
+}
+
+function trimAnswer(text){
+  return text
+  .replaceAll('ChatGPT Answer |','')
+  .replaceAll('|', '')
+  .replaceAll('\n\n', '')
+  .replaceAll('.', '')
+  .replaceAll('than the "menu_item"', '')
+  .replaceAll(' than the menu item', '')
+  .replaceAll(' or other comments','')
+  .replaceAll('Subject Line: ','')
+}
+
+export async function askTime(req){
+  let whatTimeAI = `${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+  .replace('Business_Website',reviewPrompt(req.body.business_website))
+  .replace('Business_Type',reviewPrompt(req.body.businessType))} . 
+  Now your task is to decide the date and time you will send a marketing email to customers in the next 7 days.
+  The goal of the marketing email is "${reviewPrompt(req.body.goal_Task)}".
+  In your response only provide one date and time in the format hh:mm:ss. 
+  
+  Start and end your precise answer in this format "ChatGPT Answer |hh:mm:ss|" and do not include any additional information`;
+
+  let responseAI = await askToAI(whatTimeAI);
+  return trimAnswer(responseAI.data.choices[0].text)
+}
+
+export async function findTheMenuItem(req){
+  let ask = `${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+  .replace('Business_Website',reviewPrompt(req.body.business_website))
+  .replace('Business_Type',reviewPrompt(req.body.businessType))} . 
+  Now your task is to find a "menu_item" to promote in a marketing email that will be sent at "${response.message.time}"
+  The goal of the marketing email is "promote one of the menu items".
+  In your response only provide only one "menu_item" by looking up items on this page "business_menu". 
+  Start and end your precise answer in this format "ChatGPT Answer |menu_item|" and do not include any more information`
+  let waitResponse = await askToAI(ask);
+  return (trimAnswer(waitResponse.data.choices[0].text));
+}
+
+export async function generateSubjectLine(req) {
+  let ask = `${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+  .replace('Business_Website',reviewPrompt(req.body.business_website))
+  .replace('Business_Type',reviewPrompt(req.body.businessType))} .
+  Now your task is to decide a "subject_line" of a marketing email that will be sent at "${response.message.time}"
+  The goal of the marketing email is "promote one of the menu items" called "${response.message.menuItem}"
+  In your response only provide only one subject line with a character limit of 60 characters. 
+  Start and end your precise answer in this format "ChatGPT Answer |subject_line|" and do not incude any more information
+  `
+  let waitResponse = await askToAI(ask);
+  return (trimAnswer(waitResponse.data.choices[0].text));
+}
+
+export async function generateEmailBody(req){
+  let ask = `${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+  .replace('Business_Website',reviewPrompt(req.body.business_website))
+  .replace('Business_Type',reviewPrompt(req.body.businessType))} .
+  Your task is to create "email_body" (i.e. body of the email for a marketing email) with the subject line "${response.message.subjectLine}" that will be sent at "${response.message.time}"
+  The goal of the marketing email is "promote one of the menu items" called "${response.message.menuItem}"
+  Follow each of the below rules in your task
+  1. Do not include any information about who the email is addressed to and who it is from
+  2. Limit your response to 300 characters max. 
+  
+  Start and end your precise response to create "email_body" in this format "ChatGPT Answer |email_body|"
+  `
+  let waitResponse = await askToAI(ask);
+  console.log(waitResponse.data.choices[0].text)
+  return (trimAnswer(waitResponse.data.choices[0].text));
+}
+
 export default async function (req, res){
-
-  const assigningUserAsAManager = await askToAI(`Assume you are a marketing manager for "${reviewPrompt(req.body.brandName)}".`);
-
-  console.log(`Vacant the position to : AI  ${assigningUserAsAManager.data.choices[0].text}`);
-
-  const askTypeOfCompany = await askToAI(`which of type of business this company deal read this website ${req.body.brandURL} in three word`);
-  
-  console.log(`Company Type : AI  ${askTypeOfCompany.data.choices[0].text}`);
-
-  const givingTask = await askToAI(`Your task is to create "email_body" for ${askTypeOfCompany.data.choices[0].text} (i.e. body of email for promoting the store with the subject line.
-    Follow each of below rules in your task
-    1. Do not include any information about who email is addressed to and who it is from
-    2. Suggest an attractive subject in a new line with just 70 characters.
-    3. Find the menu text from ${req.body.brandURL} and return it's href.
-    4. ${ (req.body.feedback !== '') ? req.body.feedback : ''  }
-    5.. Limit your response to 300 characters max.
-    `);
-
-  let splitResponse = givingTask.data.choices[0].text.split('\n\n')
-
-  res.status(200).json({ result: splitResponse });
-  
+  response.message.time =  await askTime(req);
+  response.message.menuItem = await findTheMenuItem(req);
+  response.message.subjectLine = await generateSubjectLine(req);
+  response.message.emailBody = await generateEmailBody(req);
+  response.status = true
+  res.status(200).json({ result: response });
 }
 
 function reviewPrompt(ask) {

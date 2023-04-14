@@ -129,11 +129,29 @@ pre code.hljs {
   .hljs-meta {
     color: #1f7199;
   }
-  
   .hljs-meta .hljs-string {
     color: #38a;
   }
-  
+  .header-title{
+    line-height: 3.5em;
+    text-align: center;
+    font-size: 24px;
+  }
+  .formControlTextArea{
+    width: 100%;
+    border: 1px solid;
+    border-radius: 5px;
+    margin-top: 12px;
+    padding: 9px;
+  }
+  .requestForm{
+    width: 28%;
+    position: fixed;
+    left: 0;
+  }
+  .pl-5{
+    padding-left: 40px;
+  }
   .btn{
     padding: 10px;
     border-radius: 10px;
@@ -146,6 +164,26 @@ pre code.hljs {
     background: #f76d6d;
     color: white;
   }
+  .btn-success{
+    background-color: #54a123;
+    color: white;
+  }
+  .pull-right{
+    float: right;
+  }
+  .w-100 {
+    width: 100%;
+  }
+  .d-flex{
+    display: flex;
+  }
+  .mt-4{
+    margin-top: 40px;
+  }
+  .mt-3{
+    margin-top: 30px;
+  }
+  
   .rightleftpadd{
     padding: 0px 100px;
   }
