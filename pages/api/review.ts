@@ -11,7 +11,7 @@ async function askToAI(ques){
     model: process.env.MODEL_NAME,
     prompt: ques,
     max_tokens: 2000,
-    temperature: 0.6,
+    temperature: 0.1,
   })
   return query
 }

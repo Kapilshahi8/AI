@@ -1,9 +1,20 @@
 import Head from "next/head";
+import Image from 'next/image'
 import { useState, useEffect } from "react";
 import React from "react";
 import { themeUserDetails } from "./api/helper/theme";
 import Modal from 'react-modal'
+import logo from '../public/img/logo.png'
 
+const MyImage = (props) => {
+	return (
+	  <Image
+		src={logo}
+		alt="Picture of the Webpage"
+		style={ {width:'30%', margin: 'auto'} }
+	/>
+	)
+}
 export default function Review() {
 
 	// form control
@@ -106,7 +117,8 @@ export default function Review() {
 			<main className="flex flex-col items-center justify-center m-20">
 			<div className="d-flex">
 				<form className="requestForm pl-5">
-					<h3 className="text-slate-900 text-center text-xl mb-3">
+				<MyImage/>
+					<h3 className="text-slate-900 text-center text-xl mb-3 mt-2 text-underline">
 						Goal of task {themeUserDetails.username}!
 					</h3>
 						<label>Business name</label>

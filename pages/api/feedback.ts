@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
+import { themeUserDetails } from "./helper/theme";
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -46,8 +47,11 @@ async function feebackUserToAIForGenerateANewEmailBody(req){
     response.message.subjectLine = JSON.parse(req.body.oldAiResponse).result.message.subjectLine;
     response.message.emailBody = JSON.parse(req.body.oldAiResponse).result.message.emailBody;
 
-    let say = `Read ${response.message.emailBody} and
-    Send me another "email_body" and consider this feedback "${reviewPrompt(req.body.feedback)}"`;
+    let say = `${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+    .replace('Business_Website',reviewPrompt(req.body.business_website))
+    .replace('Business_Type',reviewPrompt(req.body.businessType))} .
+
+    Send me another "email_body" and consider this feedback "${reviewPrompt(req.body.feedback)}" `;
     let waitResponse = await askToAI(say);
     return (trimAnswer(waitResponse.data.choices[0].text));
 }
@@ -58,8 +62,12 @@ async function feebackUserToAIForGenerateANewSubjectLine(req){
     response.message.subjectLine = JSON.parse(req.body.oldAiResponse).result.message.subjectLine;
     response.message.emailBody = JSON.parse(req.body.oldAiResponse).result.message.emailBody;
 
-    let say = `Read ${response.message.subjectLine} and
+    let say = `
+    ${themeUserDetails.headerLine.replace('Business_Name', reviewPrompt(req.body.business_name) )
+    .replace('Business_Website',reviewPrompt(req.body.business_website))
+    .replace('Business_Type',reviewPrompt(req.body.businessType))} .
     Send me another "subject_line" and consider this feedback "${reviewPrompt(req.body.feedback)}"`;
+    
     let waitResponse = await askToAI(say);
     return (trimAnswer(waitResponse.data.choices[0].text));
 }
