@@ -36,6 +36,8 @@ function trimAnswer(text){
   .replaceAll(' than the menu item', '')
   .replaceAll(' or other comments','')
   .replaceAll('Subject Line: ','')
+  .replaceAll('Email Body:', '')
+  .replaceAll('Email Body: ', '')
 }
 
 export async function askTime(req){

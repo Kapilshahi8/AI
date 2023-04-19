@@ -26,6 +26,8 @@ function trimAnswer(text){
     .replaceAll(' or other comments','')
     .replaceAll('Subject Line: ', '')
     .replaceAll('Subject: ', '')
+    .replaceAll('Email Body:', '')
+    .replaceAll('Email Body: ', '')
 }
 
   async function askToAI(ques){ 
