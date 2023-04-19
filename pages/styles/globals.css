@@ -188,7 +188,8 @@ pre code.hljs {
   }
   
   .rightleftpadd{
-    padding: 0px 100px;
+    display: flex;
+    gap: 10px;
   }
   
   /* Misc effects */

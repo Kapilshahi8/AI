@@ -184,7 +184,7 @@ export default function Review() {
 						<div className="relative w-2/4 ">
 							<div className="rightleftpadd">
 								<button className="btn btn-primary">Accept</button>
-								<button className="btn btn-danger pull-right" onClick={() => setIsOpen(true)}>Reject</button>
+								<button className="btn btn-danger" onClick={() => setIsOpen(true)}>Reject</button>
 							</div>
 							<div
 								dangerouslySetInnerHTML={{ __html: themeUserDetails.emailTemplate1.replaceAll('--logo--', imageUrl).replaceAll('--brandingImg--', themeUserDetails.brandImageSRC).replaceAll('Subject_Line', emailSubjectLine).replaceAll('Email_Body', emailBody).replaceAll('--brandMenu--',brandMenuURL).replaceAll('--brand--', brandURL) }}>
