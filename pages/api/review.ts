@@ -90,7 +90,6 @@ export async function generateEmailBody(req){
   Start and end your precise response to create "email_body" in this format "ChatGPT Answer |email_body|"
   `
   let waitResponse = await askToAI(ask);
-  console.log(waitResponse.data.choices[0].text)
   return (trimAnswer(waitResponse.data.choices[0].text));
 }
 

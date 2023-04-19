@@ -1,4 +1,3 @@
-import data from './json/emailDesign1.json';
 import { Configuration, OpenAIApi } from "openai";
 
 function trimAnswer(text){
@@ -24,7 +23,8 @@ const response = {
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
-  });
+});
+
 const openai = new OpenAIApi(configuration);
 
 const askToAI = async (ques) =>{
@@ -32,18 +32,9 @@ const askToAI = async (ques) =>{
       model: process.env.MODEL_NAME,
       prompt: ques,
       max_tokens: 2000,
-      temperature: 0.6,
+      temperature: 0.6, 
     })
     return query
-  }
-
-module.exports = {
-    emailTemplate1: function(input) {
-        return data;
-    },
-    emailTemplate2: function(input) {
-
-    }
-};
+}
 
 export{trimAnswer, response, openai, askToAI}

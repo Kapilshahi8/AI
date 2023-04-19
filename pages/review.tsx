@@ -74,6 +74,7 @@ export default function Review() {
 		setEmailSubjectLine(data.result.message.subjectLine);
 		setEmailBody(data.result.message.emailBody);
 		setIsLoading(false);
+		setIsOpen(false);
 	}
 
 	const uploadToServer = async () => {
@@ -185,16 +186,15 @@ export default function Review() {
 
 				<Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)} style={customStyles} >
 					<h1 className="header-title"> How can i make it better ?</h1>
-					<div className="d-flex">
-						{/* <button className="btn btn-primary pull-right" onClick={(e) => {selectedReason(e); setRequestType('subject_line')}}>Request for Change Subject Line</button>
-						<button className="btn btn-primary pull-right" onClick={(e) => {selectedReason(e); setRequestType('email_Body') } }>Request for change Email Body</button> */}
+					{/* <div className="d-flex">
+						<button className="btn btn-primary pull-right" onClick={(e) => {selectedReason(e); setRequestType('subject_line')}}>Request for Change Subject Line</button>
+						<button className="btn btn-primary pull-right" onClick={(e) => {selectedReason(e); setRequestType('email_Body') } }>Request for change Email Body</button>
 						<button className="btn btn-primary pull-right" onClick={(e) => { selectedReason(e); setRequestType('changeBoth') }}>Reason for change whole content</button>
-					</div>
-					{selectedButtonText &&
-						<div className="feedbackArea mt-3">
-							<h1 className="selectedText mt-2">{selectedButtonText}</h1>
+					</div> */}
+					{isOpen &&
+						<div className="feedbackArea mt-1">
 							<textarea className="formControlTextArea" rows={3} onChange={(e)=>setFeedback(e.target.value)}/>
-							<button className="btn btn-success w-100 mt-2" onClick={(e) =>{ onSubmit(); setIsOpen(false) }}>Submit</button>
+							<button className="btn btn-success w-100 mt-2" onClick={(e) =>{ setRequestType('changeBoth'); onSubmit();  }}>Submit</button>
 						</div>
 					}
 				</Modal>

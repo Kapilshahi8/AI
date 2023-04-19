@@ -25,9 +25,10 @@ function trimAnswer(text){
     .replaceAll(' than the menu item', '')
     .replaceAll(' or other comments','')
     .replaceAll('Subject Line: ', '')
+    .replaceAll('Subject: ', '')
 }
 
-  async function askToAI(ques){
+  async function askToAI(ques){ 
     const query = await openai.createCompletion({
       model: process.env.MODEL_NAME,
       prompt: ques,
@@ -42,6 +43,7 @@ async function feebackUserToAIForGenerateANewEmailBody(req){
     response.message.time = JSON.parse(req.body.oldAiResponse).result.message.time;
     response.message.subjectLine = JSON.parse(req.body.oldAiResponse).result.message.subjectLine;
     response.message.emailBody = JSON.parse(req.body.oldAiResponse).result.message.emailBody;
+
     let say = `Read ${response.message.emailBody} and
     Send me another "email_body" and consider this feedback "${reviewPrompt(req.body.feedback)}"`;
     let waitResponse = await askToAI(say);
@@ -53,6 +55,7 @@ async function feebackUserToAIForGenerateANewSubjectLine(req){
     response.message.time = JSON.parse(req.body.oldAiResponse).result.message.time;
     response.message.subjectLine = JSON.parse(req.body.oldAiResponse).result.message.subjectLine;
     response.message.emailBody = JSON.parse(req.body.oldAiResponse).result.message.emailBody;
+
     let say = `Read ${response.message.subjectLine} and
     Send me another "subject_line" and consider this feedback "${reviewPrompt(req.body.feedback)}"`;
     let waitResponse = await askToAI(say);
@@ -60,23 +63,30 @@ async function feebackUserToAIForGenerateANewSubjectLine(req){
 }
 
 export default async function (req, res){
+  let feedbackResponse = {
+    message: {
+      subjectLine: '',
+      emailBody: ''
+    },
+    status:false
+  }
     switch (req.body.requestType) {
         case 'email_Body':
-        response.message.emailBody =  await feebackUserToAIForGenerateANewEmailBody(req);
+        feedbackResponse.message.emailBody =  await feebackUserToAIForGenerateANewEmailBody(req);
             break;
         case 'subject_line':
-        response.message.subjectLine =  await feebackUserToAIForGenerateANewSubjectLine(req);
+        feedbackResponse.message.subjectLine =  await feebackUserToAIForGenerateANewSubjectLine(req);
             break;
         case 'changeBoth' :
-          response.message.subjectLine =  await feebackUserToAIForGenerateANewSubjectLine(req);
-          response.message.emailBody =  await feebackUserToAIForGenerateANewEmailBody(req);
+          feedbackResponse.message.subjectLine =  await feebackUserToAIForGenerateANewSubjectLine(req);
+          feedbackResponse.message.emailBody =  await feebackUserToAIForGenerateANewEmailBody(req);
             break;  
         default:
             break;
     }
-    
-    response.status = true
-    res.status(200).json({ result: response });
+
+    feedbackResponse.status = true
+    res.status(200).json({ result: feedbackResponse });
   }
   
 function reviewPrompt(ask) {
