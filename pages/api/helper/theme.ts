@@ -117,7 +117,7 @@ export const themeUserDetails = {
                                                   <div align="center" class="alignment">
                                                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="www.example.com" style="height:48px;width:120px;v-text-anchor:middle;" arcsize="28%" stroke="false" fillcolor="#000000"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Tahoma, Verdana, sans-serif; font-size:16px"><![endif]-->
                                                     <a
-                                                      href="--brandMenu--"
+                                                      href="--purposeAppURL--"
                                                       style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#000000;border-radius:13px;width:auto;border-top:0px solid #179dc7;font-weight:400;border-right:0px solid #179dc7;border-bottom:0px solid #179dc7;border-left:0px solid #179dc7;padding-top:8px;padding-bottom:8px;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"
                                                       target="_blank"><span
                                                         style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span

@@ -53,7 +53,7 @@ export default function Review() {
 			setPurposeButton('Learn More')
 				break;
 			case '2':
-			setPurposeButton('View More')
+			setPurposeButton(brandName)
 				break;
 			default:
 			setPurposeButton('')
