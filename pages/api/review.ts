@@ -80,7 +80,7 @@ export async function findTheMenuItem(req){
   The goal of the marketing email is "${whatWouldBeThePurpose(req.body.goal_Task)}".
   In your response only provide only one "menu_item" by looking up items on this page "${req.body.brandMenuURL}". 
   Start and end your precise answer in this format "ChatGPT Answer |menu_item|" and do not include any more information`
-  // console.log('menu item ask',ask)
+
   let waitResponse = await askToAI(ask);
   return (trimAnswer(waitResponse.data.choices[0].text));
 }
@@ -91,7 +91,8 @@ export async function generateSubjectLine(req) {
   .replace('Business_Website',reviewPrompt(req.body.business_website))
   .replace('Business_Type',reviewPrompt(req.body.businessType))} .
   Now your task is to decide a "subject_line" of a marketing email that will be sent at "${response.message.time}".
-  The goal of the marketing email is "${whatWouldBeThePurpose(req.body.goal_Task)}" called "${response.message.menuItem}".
+  
+  The goal of the marketing email is "${whatWouldBeThePurpose(req.body.goal_Task)}" ${req.body.goal_Task == "1" && `called "${response.message.menuItem}`}.
 
   In your response only provide only one subject line with a character limit of 60 characters. 
 
@@ -100,7 +101,7 @@ export async function generateSubjectLine(req) {
   Start and end your precise answer in this format "ChatGPT Answer |subject_line|" and do not incude any more information
   `
   let waitResponse = await askToAI(ask);
-  console.group('subject line ', ask);
+
   return (trimAnswer(waitResponse.data.choices[0].text));
 }
 
@@ -109,7 +110,7 @@ export async function generateEmailBody(req){
   .replace('Business_Website',reviewPrompt(req.body.business_website))
   .replace('Business_Type',reviewPrompt(req.body.businessType))} .
   Your task is to create "email_body" (i.e. body of the email for a marketing email) with the subject line "${response.message.subjectLine}" that will be sent at "${response.message.time}"
-  The goal of the marketing email is "${whatWouldBeThePurpose(req.body.goal_Task)}" called "${response.message.menuItem}"
+  The goal of the marketing email is "${whatWouldBeThePurpose(req.body.goal_Task)}" ${req.body.goal_Task == "1" && `called "${response.message.menuItem}`}.
   Follow each of the below rules in your task
   1. Do not include any information about who the email is addressed to and who it is from
   2. Limit your response to 300 characters max
@@ -118,8 +119,6 @@ export async function generateEmailBody(req){
   Start and end your precise response to create "email_body" in this format "ChatGPT Answer |email_body|"
   `
   let waitResponse = await askToAI(ask);
-  
-  // console.log('email body ask ',ask);
 
   return (trimAnswer(waitResponse.data.choices[0].text));
 }
@@ -127,14 +126,17 @@ export async function generateEmailBody(req){
 export default async function (req, res){
   
   response.message.time =  await askTime(req);
-  response.message.menuItem = await findTheMenuItem(req);
-
+  if(req.body.goal_Task === '1'){
+    response.message.menuItem = await findTheMenuItem(req);
+  }
   response.message.subjectLine = await generateSubjectLine(req);
   
   response.message.emailBody = await generateEmailBody(req);
 
   response.status = true
+
   res.status(200).json({ result: response });
+
 }
 
 function reviewPrompt(ask) {

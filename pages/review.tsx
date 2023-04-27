@@ -30,6 +30,7 @@ export default function Review() {
 	const [requestType, setRequestType] = useState('');
 	const [countSubjectResponse, setCountSubjectResponse] = useState([]);
 	const [purposeButton, setPurposeButton] = useState('');
+	const [purposeButtonURL, setPurposeButtonURL] = useState('');
 	//image
 	const [imageUrl, setImageUrl] = useState(themeUserDetails.brandlogoURl);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -51,15 +52,16 @@ export default function Review() {
 		switch (goalTask) {
 			case '1':
 			setPurposeButton('Learn More')
+			setPurposeButtonURL(brandMenuURL)
 				break;
 			case '2':
 			setPurposeButton(brandName)
+			setPurposeButtonURL(brandURL)
 				break;
 			default:
 			setPurposeButton('')
 				break;
 		}
-		console.log(purposeButton);
 	}, [selectedImage, goalTask]);
 
 
@@ -77,6 +79,7 @@ export default function Review() {
 			business_website: brandURL, 
 			brandLogo: imageUrl, 
 			goal_Task: goalTask, 
+			brandMenuURL:brandMenuURL,
 			businessType:businessType 
 		}
 
@@ -158,12 +161,12 @@ export default function Review() {
 						<br/>
 						<p>
 							<label htmlFor="promoteMenu"> Promote Menu Item </label>
-							<input type="radio" className="form-control" id="promoteMenu" value={1} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
+							<input type="radio" className="form-control" id="promoteMenu" value={'1'} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
 						</p>
 						
 						<p>
 							<label htmlFor="takeUserWeb"> Take user to website </label>
-							<input type="radio" className="form-control" id="takeUserWeb" value={2} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
+							<input type="radio" className="form-control" id="takeUserWeb" value={'2'} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
 						</p>
 						<br/>
 						<hr/>
@@ -202,7 +205,7 @@ export default function Review() {
 								<button className="btn btn-danger" onClick={() => setIsOpen(true)}>Reject</button>
 							</div>
 							<div
-								dangerouslySetInnerHTML={{ __html: themeUserDetails.emailTemplate1.replaceAll('--logo--', imageUrl).replaceAll('--brandingImg--', themeUserDetails.brandImageSRC).replaceAll('Subject_Line', emailSubjectLine).replaceAll('Email_Body', emailBody).replaceAll('purposeApp', purposeButton).replaceAll('--brandMenu--',brandMenuURL).replaceAll('--brand--', brandURL) }}>
+								dangerouslySetInnerHTML={{ __html: themeUserDetails.emailTemplate1.replaceAll('--logo--', imageUrl).replaceAll('--brandingImg--', themeUserDetails.brandImageSRC).replaceAll('Subject_Line', emailSubjectLine).replaceAll('Email_Body', emailBody).replaceAll('--purposeAppURL--',purposeButtonURL).replaceAll('--purposeApp--', purposeButton).replaceAll('--brandMenu--',brandMenuURL).replaceAll('--brand--', brandURL) }}>
 							</div>
 							{/* {result.replaceAll('\n', '<br>')} */}
 						</div>
