@@ -52,6 +52,7 @@ async function feebackUserToAIForGenerateANewEmailBody(req){
     .replace('Business_Type',reviewPrompt(req.body.businessType))} .
 
     Send me another "email_body" and consider this feedback "${reviewPrompt(req.body.feedback)}" `;
+
     let waitResponse = await askToAI(say);
     return (trimAnswer(waitResponse.data.choices[0].text));
 }

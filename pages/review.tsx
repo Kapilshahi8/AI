@@ -5,7 +5,8 @@ import React from "react";
 import { themeUserDetails } from "./api/helper/theme";
 import Modal from 'react-modal'
 import logo from '../public/img/logo.png'
-
+import Link from "next/link";
+let subjectResponseArray = [];
 const MyImage = (props) => {
 	return (
 	  <Image
@@ -20,15 +21,15 @@ export default function Review() {
 	// form control
 	const [brandName, setBrandName] = useState(themeUserDetails.brandName);
 	const [brandURL, setBrandURL] = useState(themeUserDetails.brandURL);
-	const [goalTask, setGoalTask] = useState('Promote menu item');
+	const [goalTask, setGoalTask] = useState('1');
 	const [brandMenuURL, setBrandMenuURL] = useState('');
 	const [businessType, setBusinessType] = useState('');
 	const [feedback, setFeedback] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedButtonText, setSelectedButtonText] = useState('');
 	const [requestType, setRequestType] = useState('');
-
-
+	const [countSubjectResponse, setCountSubjectResponse] = useState([]);
+	const [purposeButton, setPurposeButton] = useState('');
 	//image
 	const [imageUrl, setImageUrl] = useState(themeUserDetails.brandlogoURl);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -43,13 +44,23 @@ export default function Review() {
 
 	useEffect(() => {
 		if (selectedImage) {
-			console.log('imageUrl', selectedImage);
 			setImageUrl(URL.createObjectURL(selectedImage));
 			setIspreview(true);
-			console.log(imageUrl);
 			uploadToServer();
 		}
-	}, [selectedImage]);
+		switch (goalTask) {
+			case '1':
+			setPurposeButton('Learn More')
+				break;
+			case '2':
+			setPurposeButton('View More')
+				break;
+			default:
+			setPurposeButton('')
+				break;
+		}
+		console.log(purposeButton);
+	}, [selectedImage, goalTask]);
 
 
 	useEffect(() => {
@@ -59,18 +70,17 @@ export default function Review() {
 
 	async function onSubmit() {
 		setIsLoading(true);
-		let body:Object = {};
-		let apiRequest = '/';
-		switch (requestType) {
-			case 'changeBoth':
-				body = {feedback: feedback, requestType:requestType, oldAiResponse: localStorage.getItem('response')}
-				apiRequest="/api/feedback"
-				break;
-			default:
-				body = {business_name: brandName, business_website: brandURL, brandLogo: imageUrl, goal_Task: goalTask, businessType:businessType }
-				apiRequest="/api/review"
-				break;
+		let body:Object = {
+			business_name: brandName, 
+			oldResponseArray:countSubjectResponse,
+			feedback:feedback, 
+			business_website: brandURL, 
+			brandLogo: imageUrl, 
+			goal_Task: goalTask, 
+			businessType:businessType 
 		}
+
+		let apiRequest:string ="/api/review"
 
 		const response = await fetch(apiRequest, {
 			method: "POST",
@@ -82,6 +92,11 @@ export default function Review() {
 
 		const data = await response.json();
 		localStorage.setItem('response', JSON.stringify(data));
+
+		subjectResponseArray.push(data);
+
+		setCountSubjectResponse( subjectResponseArray )
+		
 		setEmailSubjectLine(data.result.message.subjectLine);
 		setEmailBody(data.result.message.emailBody);
 		setIsLoading(false);
@@ -111,7 +126,6 @@ export default function Review() {
 			<Head>
 				<title>Marketing Mail</title>
 				<meta name="description" content="" />
-				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<main className="flex flex-col items-center justify-center m-20">
@@ -141,17 +155,18 @@ export default function Review() {
 						/>
 
 						<label>What Purpose</label>
-						{/* <select
-							onChange={(e) => {
-							setGoalTask(e.target.value);
-							}} className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-200 rounded mb-2" >
-							<option selected={true} value={'1'}>Promote Menu Page</option>
-							<option value={'2'} >Take user to webiste</option>
-						</select> */}
-						<input className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-200 rounded mb-2" type="text" name="purpose"
-							placeholder="Enter a product name" value={goalTask} onChange={(event) => { setGoalTask(event.target.value) }}
-						/>
-
+						<br/>
+						<p>
+							<label htmlFor="promoteMenu"> Promote Menu Item </label>
+							<input type="radio" className="form-control" id="promoteMenu" value={1} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
+						</p>
+						
+						<p>
+							<label htmlFor="takeUserWeb"> Take user to website </label>
+							<input type="radio" className="form-control" id="takeUserWeb" value={2} name="purpose" onChange={(event) => { setGoalTask(event.target.value) } } />
+						</p>
+						<br/>
+						<hr/>
 						<label>Brand Logo Image</label>
 						<div className="form-group uploadButton">
 							<input
@@ -187,7 +202,7 @@ export default function Review() {
 								<button className="btn btn-danger" onClick={() => setIsOpen(true)}>Reject</button>
 							</div>
 							<div
-								dangerouslySetInnerHTML={{ __html: themeUserDetails.emailTemplate1.replaceAll('--logo--', imageUrl).replaceAll('--brandingImg--', themeUserDetails.brandImageSRC).replaceAll('Subject_Line', emailSubjectLine).replaceAll('Email_Body', emailBody).replaceAll('--brandMenu--',brandMenuURL).replaceAll('--brand--', brandURL) }}>
+								dangerouslySetInnerHTML={{ __html: themeUserDetails.emailTemplate1.replaceAll('--logo--', imageUrl).replaceAll('--brandingImg--', themeUserDetails.brandImageSRC).replaceAll('Subject_Line', emailSubjectLine).replaceAll('Email_Body', emailBody).replaceAll('purposeApp', purposeButton).replaceAll('--brandMenu--',brandMenuURL).replaceAll('--brand--', brandURL) }}>
 							</div>
 							{/* {result.replaceAll('\n', '<br>')} */}
 						</div>
