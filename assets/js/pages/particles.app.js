@@ -1,4 +1,5 @@
 particlesJS("auth-particles", {
+
     particles: {
         number: {
             value: 900,
@@ -88,7 +89,7 @@ particlesJS("auth-particles", {
             },
             bubble: {
                 distance: 400,
-                size: 4,
+                size: 2,
                 duration: 2,
                 opacity: .8,
                 speed: 3
